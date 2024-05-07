@@ -7,5 +7,4 @@
   cy.get("#output").find("tr", { timeout: 10000 }).then(rows => { // Increase timeout to 10 seconds
     expect(rows.length).equal(4); 
   }); 
-  // rest of your code...
 }
