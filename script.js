@@ -1,10 +1,31 @@
-() => { 
-  cy.visit(baseUrl + "/main.html"); 
-  cy.get('tr#loading', { timeout: 10000 }).should('be.visible').find('td').invoke('text').then(text => { 
-    expect(text.trim()).equal("Loading..."); 
-  }); 
-  cy.wait(10000); // Wait for promises to resolve and for loading to go away
-  cy.get("#output").find("tr", { timeout: 10000 }).then(rows => { // Increase timeout to 10 seconds
-    expect(rows.length).equal(4); 
-  }); 
+// This is just a mock function that simulates an asynchronous operation
+function asyncOperation() {
+  return new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 1000));
 }
+
+// This is where you manipulate the DOM
+async function populateTable() {
+  const output = document.getElementById('output');
+  
+  // Add the loading row
+  let row = output.insertRow();
+  let cell = row.insertCell();
+  cell.colSpan = 2;
+  cell.textContent = 'Loading...';
+  
+  // Perform the asynchronous operations
+  const results = await Promise.all([asyncOperation(), asyncOperation(), asyncOperation(), asyncOperation()]);
+  
+  // Remove the loading row
+  output.deleteRow(0);
+  
+  // Add the result rows
+  for (let i = 0; i < results.length; i++) {
+    let row = output.insertRow();
+    row.insertCell().textContent = `Promise ${i + 1}`;
+    row.insertCell().textContent = results[i];
+  }
+}
+
+// Call the function when the script loads
+populateTable();
